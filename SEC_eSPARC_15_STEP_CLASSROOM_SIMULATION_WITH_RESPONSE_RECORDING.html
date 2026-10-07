@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SEC eSPARC — Classroom Registration Simulation</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f3f6f8;color:#263238}
+.top{background:#075b45;color:#fff;padding:14px 24px;display:flex;align-items:center;gap:14px}
+.logo{width:44px;height:44px;border:2px solid #fff;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:13px}
+.top h1{font-size:18px;margin:0}.top p{margin:3px 0 0;font-size:12px;opacity:.9}
+.mock{background:#f7c948;color:#171717;text-align:center;padding:7px;font-size:12px;font-weight:800;letter-spacing:.4px}
+.notice{margin:14px auto 0;max-width:1200px;background:#fff8e1;border:1px solid #f0c36a;padding:10px 14px;font-size:12px;color:#654b00}
+.layout{max-width:1200px;margin:14px auto 40px;display:grid;grid-template-columns:260px 1fr;gap:16px;padding:0 12px}
+.side{background:#fff;border:1px solid #dce3e7;border-radius:4px;overflow:hidden;height:max-content;position:sticky;top:10px}
+.sidehead{background:#eef4f1;padding:14px;font-weight:800;color:#075b45;border-bottom:1px solid #dce3e7}
+.step{display:flex;gap:10px;padding:10px 12px;border-bottom:1px solid #edf0f1;font-size:12px;cursor:pointer}
+.step:hover{background:#f7faf8}.step.active{background:#e5f2ed;border-left:4px solid #075b45;padding-left:8px;font-weight:700}
+.num{width:25px;height:25px;border-radius:50%;background:#d9e2df;display:grid;place-items:center;font-weight:800;flex:none}.active .num{background:#075b45;color:#fff}.done .num{background:#6b9d8d;color:#fff}
+.main{background:#fff;border:1px solid #dce3e7;border-radius:4px;min-height:700px}
+.bar{padding:14px 18px;border-bottom:1px solid #dce3e7;display:flex;justify-content:space-between;align-items:center}
+.bar strong{color:#075b45}.progress{height:5px;background:#e7eceb}.progress i{display:block;height:100%;background:#075b45;width:6.66%;transition:.2s}
+.content{padding:22px 24px}.kicker{font-size:11px;color:#6b7775;font-weight:700;text-transform:uppercase}.content h2{font-size:20px;margin:5px 0 7px;color:#075b45}.help{font-size:12px;color:#687473;margin-bottom:18px}
+.section{border:1px solid #dfe5e4;margin-bottom:15px}.section h3{margin:0;background:#f0f5f3;padding:10px 13px;font-size:13px;color:#075b45;border-bottom:1px solid #dfe5e4}.fields{padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.full{grid-column:1/-1}.field label{display:block;font-size:11px;font-weight:700;margin-bottom:5px}.req{color:#b42318}
+input,select,textarea{width:100%;padding:9px;border:1px solid #bbc7c4;border-radius:3px;font:inherit;font-size:12px;background:#fff}textarea{min-height:80px;resize:vertical}.hint{font-size:10px;color:#75817f;margin-top:4px}
+.check{display:flex;gap:8px;align-items:flex-start;font-size:12px;margin:9px 0}.check input{width:auto;margin-top:2px}
+.notice2{padding:11px 13px;background:#eef7f4;border-left:4px solid #075b45;font-size:12px;margin:12px 0}
+.warn{padding:11px 13px;background:#fff5f3;border-left:4px solid #b42318;font-size:12px;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:11px}th,td{border:1px solid #dfe5e4;padding:8px;text-align:left}th{background:#f0f5f3}
+.actions{border-top:1px solid #dce3e7;padding:14px 18px;display:flex;justify-content:space-between;gap:8px}.right{display:flex;gap:8px}
+button{border:0;border-radius:3px;padding:10px 15px;font-size:12px;font-weight:700;cursor:pointer}button.primary{background:#075b45;color:#fff}button.secondary{background:#e8efed;color:#173d33}button.danger{background:#b42318;color:#fff}
+.captcha{display:flex;gap:10px;align-items:center}.code{background:#eee;font-weight:900;letter-spacing:4px;padding:10px 14px;border:1px dashed #777}
+.result{border:2px solid #075b45;background:#f7fcfa;padding:20px;margin-top:15px}.cert{border:1px solid #aaa;background:#fff;padding:25px;text-align:center;margin-top:12px}.cert h3{letter-spacing:2px}.ref{font-size:18px;font-weight:900;color:#075b45}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.side{position:static}.fields{grid-template-columns:1fr}.full{grid-column:auto}.actions{position:sticky;bottom:0;background:#fff}.top{padding:12px}.content{padding:16px}}
+</style>
+</head>
+<body>
+<div class="top"><div class="logo">SEC</div><div><h1>SEC eSPARC</h1><p>Electronic Simplified Processing of Application for Registration of Company</p></div></div>
+<div class="mock">CLASSROOM MOCK SIMULATION • NOT AN OFFICIAL SEC WEBSITE • NO REAL APPLICATION WILL BE SUBMITTED</div>
+<div class="notice">For educational use only. This recreation follows the structure of SEC eSPARC Regular Processing, expanded into 15 classroom screens. Do not enter real passwords, IDs, TINs, or sensitive information.</div>
+
+<div class="layout">
+<aside class="side">
+<div class="sidehead">REGISTRATION APPLICATION<br><small id="status">STATUS: NEW</small></div>
+<div id="steps"></div>
+</aside>
+
+<main class="main">
+<div class="bar"><strong id="stepTitle">STEP 1 — NAME VERIFICATION</strong><span id="counter">1 of 15</span></div>
+<div class="progress"><i id="progress"></i></div>
+<div class="content" id="content"></div>
+<div class="actions"><button class="secondary" onclick="back()">← Back</button><div class="right"><button class="secondary" onclick="saveDraft()">Save Draft</button><button class="primary" id="nextBtn" onclick="next()">Save & Continue →</button></div></div>
+</main>
+</div>
+
+<script>
+const names=[
+"Name Verification","Processing Office & Applicant","Company Type","Company Name Details","Principal Office","Purpose & Business Activities","Capital Structure","Incorporators / Members","Subscribers & Shareholdings","Corporate Officers","Beneficial Ownership","Documentary Requirements","Application Review","Terms & Certification","Submission & Payment"
+];
+let cur=0;
+const data={};
+
+/* === RESPONSE RECORDING CONFIG ===
+   Paste your deployed Google Apps Script Web App URL between the quotes below.
+   Example: https://script.google.com/macros/s/XXXXXXXX/exec
+*/
+const RESPONSE_ENDPOINT = "";
+const SIMULATION_ID = "SEC_eSPARC_15_STEP_CLASSROOM_SIMULATION";
+let responseSent = false;
+
+function collectAllAnswers(){
+  saveFields();
+  return {...data};
+}
+
+async function recordCompletion(){
+  if(responseSent || !RESPONSE_ENDPOINT) return;
+  const payload = {
+    simulation: SIMULATION_ID,
+    completedAt: new Date().toISOString(),
+    name: data.studentName || data.first || "",
+    answers: collectAllAnswers(),
+    status: "Completed"
+  };
+  try{
+    await fetch(RESPONSE_ENDPOINT, {
+      method:"POST",
+      mode:"no-cors",
+      headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify(payload)
+    });
+    responseSent = true;
+  }catch(e){
+    console.warn("Response recording failed:", e);
+  }
+}
+
+const steps=document.getElementById('steps');
+names.forEach((n,i)=>{let d=document.createElement('div');d.className='step';d.innerHTML='<span class="num">'+(i+1)+'</span><span>'+n+'</span>';d.onclick=()=>{if(i<=cur+1){cur=i;render()}};steps.appendChild(d)});
+
+function F(label,id,type="text",extra=""){
+return `<div class="field"><label>${label}${label.includes('*')?'':' <span class="req">*</span>'}</label>${type==="select"?`<select id="${id}">${extra}</select>`:type==="textarea"?`<textarea id="${id}"></textarea>`:`<input id="${id}" ${type!=="text"?`type="${type}"`:''}>`}</div>`
+}
+function wrap(title,desc,body){return `<div class="kicker">SEC eSPARC MOCK</div><h2>${title}</h2><div class="help">${desc}</div>${body}`}
+function get(id){return document.getElementById(id)}
+function saveFields(){document.querySelectorAll('input,select,textarea').forEach(x=>{if(x.id)data[x.id]=x.type==='checkbox'?x.checked:x.value})}
+function loadFields(){document.querySelectorAll('input,select,textarea').forEach(x=>{if(x.id && data[x.id]!==undefined){if(x.type==='checkbox')x.checked=data[x.id];else x.value=data[x.id]}})}
+function page(n){
+switch(n){
+case 0:return wrap("Step 1 — Name Verification","Propose the corporate name and begin the application.",`
+<div class="section"><h3>NAME VERIFICATION</h3><div class="fields">
+${F("Student / Reporter Name *","studentName")}
+${F("Proposed Company Name *","companyName")}
+${F("Suffix *","suffix","select",'<option>- Choose -</option><option>INC.</option><option>CORPORATION</option><option>FOUNDATION</option>')}
+${F("Acronym / Abbreviation","acronym")}
+${F("With Trade Name?","trade","select",'<option>No</option><option>Yes</option>')}
+</div></div><div class="notice2">Mock system message: Name verification is simulated. No reservation is made with SEC.</div>`);
+case 1:return wrap("Step 2 — Processing Office & Applicant","Provide the office and applicant/authorized representative details.",`
+<div class="section"><h3>PROCESSING OFFICE</h3><div class="fields">${F("SEC Office *","office","select",'<option>- Choose Processing Office -</option><option>SEC Main Office - PICC</option><option>SEC Extension Office</option>')}</div></div>
+<div class="section"><h3>APPLICANT / AUTHORIZED REPRESENTATIVE CONTACT DETAILS</h3><div class="fields">
+${F("Last Name *","last")}${F("First Name *","first")}${F("Middle Name","middle")}${F("Position *","position")}${F("TIN * (use mock value)","tin")}${F("Mobile *","mobile","tel")}${F("Phone","phone","tel")}${F("Email Address *","email","email")}
+</div></div>`);
+case 2:return wrap("Step 3 — Company Type","Select the registration category applicable to the mock application.",`
+<div class="section"><h3>COMPANY TYPE</h3><div class="fields">
+${F("Processing Type *","processing","select",'<option>Regular Processing</option><option>Regular with ZERO Processing (mock)</option>')}
+${F("Company Type *","companyType","select",'<option>Domestic Stock Corporation</option><option>One Person Corporation</option><option>Domestic Non-Stock Corporation</option><option>Partnership</option>')}
+${F("Equity / Ownership *","equity","select",'<option>All Filipino</option><option>With Foreign Equity</option>')}
+${F("Number of Incorporators / Partners *","incCount","select",'<option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6–15</option>')}
+</div></div>`);
+case 3:return wrap("Step 4 — Company Name Details","Complete the name information and optional trade-name details.",`
+<div class="section"><h3>COMPANY NAME</h3><div class="fields">
+${F("Company Name *","legalName")}${F("Suffix","legalSuffix","select",'<option>INC.</option><option>CORPORATION</option><option>NONE</option>')}
+${F("Acronym Meaning","acronymMeaning","textarea")}
+${F("Primary Company Name Keyword","keyword")}
+<div class="full"><label>Trade Name Details (Optional)</label><textarea id="tradeDetails"></textarea></div>
+</div></div>
+<div class="warn">Mock validation: offensive, misleading, or restricted names would require correction in the real system.</div>`);
+case 4:return wrap("Step 5 — Principal Office","Enter the registered principal office address and contact details.",`
+<div class="section"><h3>PRINCIPAL OFFICE ADDRESS</h3><div class="fields">
+${F("House / Building / Street *","street","textarea")}${F("Barangay *","barangay")}${F("City / Municipality *","city")}${F("Province *","province")}${F("Region","region")}${F("Postal Code *","postal")}
+${F("Telephone Number","tel2")}${F("Official Email Address *","officialEmail","email")}
+</div></div>`);
+case 5:return wrap("Step 6 — Purpose & Business Activities","State the primary and secondary purposes of the corporation.",`
+<div class="section"><h3>PURPOSE OF THE CORPORATION</h3><div class="fields">
+<div class="full"><label>Primary Purpose *</label><textarea id="primaryPurpose" placeholder="Describe the main business activity"></textarea></div>
+<div class="full"><label>Secondary Purpose</label><textarea id="secondaryPurpose"></textarea></div>
+${F("Industry / Business Classification *","industry","select",'<option>Retail</option><option>Food Services</option><option>Services</option><option>Manufacturing</option><option>Technology</option><option>Other</option>')}
+</div></div>`);
+case 6:return wrap("Step 7 — Capital Structure","Enter the authorized, subscribed, and paid-up capital details.",`
+<div class="section"><h3>CAPITALIZATION</h3><div class="fields">
+${F("Authorized Capital Stock *","authorized","number")}${F("Number of Authorized Shares *","authorizedShares","number")}
+${F("Par Value per Share *","parValue","number")}${F("Subscribed Capital *","subscribed","number")}
+${F("Number of Subscribed Shares *","subscribedShares","number")}${F("Paid-up Capital *","paidUp","number")}
+</div></div><div class="notice2">For this classroom mock, enter sample amounts only.</div>`);
+case 7:return wrap("Step 8 — Incorporators / Members","Encode the persons or entities participating in the registration.",`
+<div class="section"><h3>INCORPORATOR 1 / MEMBER</h3><div class="fields">
+${F("First Name *","incFirst")}${F("Last Name *","incLast")}${F("Middle Name","incMiddle")}
+${F("Nationality *","incNationality")}${F("Residence / Address *","incAddress","textarea")}${F("TIN * (mock)","incTin")}
+</div></div>
+<div class="section"><h3>ADDITIONAL INCORPORATORS / MEMBERS</h3><div class="fields"><div class="full"><label>List additional names and details</label><textarea id="additionalInc"></textarea></div></div></div>`);
+case 8:return wrap("Step 9 — Subscribers & Shareholdings","Record subscribed shares and ownership information.",`
+<div class="section"><h3>SUBSCRIPTION DETAILS</h3><table><tr><th>Name</th><th>Shares Subscribed</th><th>Amount Subscribed</th><th>Amount Paid</th></tr>
+<tr><td><input id="subName1"></td><td><input id="subShares1" type="number"></td><td><input id="subAmount1" type="number"></td><td><input id="subPaid1" type="number"></td></tr>
+<tr><td><input id="subName2"></td><td><input id="subShares2" type="number"></td><td><input id="subAmount2" type="number"></td><td><input id="subPaid2" type="number"></td></tr>
+</table></div>`);
+case 9:return wrap("Step 10 — Corporate Officers","Provide the officers and their positions.",`
+<div class="section"><h3>OFFICERS</h3><table><tr><th>Position</th><th>Name</th><th>Nationality</th><th>Mock TIN</th></tr>
+${["President","Corporate Secretary","Treasurer","Other Officer"].map((x,i)=>`<tr><td>${x}</td><td><input id="offName${i}"></td><td><input id="offNat${i}"></td><td><input id="offTin${i}"></td></tr>`).join("")}</table></div>
+<div class="notice2">The real application requires the applicable officer information and eligibility details.</div>`);
+case 10:return wrap("Step 11 — Beneficial Ownership","Provide the beneficial ownership declaration required for the application.",`
+<div class="section"><h3>BENEFICIAL OWNERSHIP INFORMATION</h3><div class="fields">
+${F("Does the corporation have a beneficial owner? *","beneficial","select",'<option>Yes</option><option>No</option>')}
+${F("Ownership / Control Percentage","benefitPercent","number")}
+<div class="full"><label>Beneficial Owner Name / Explanation</label><textarea id="benefitName"></textarea></div>
+</div></div><div class="warn">Use fictional data only. Never place real sensitive personal information in this classroom simulation.</div>`);
+case 11:return wrap("Step 12 — Documentary Requirements","Review the documentary requirements represented by this mock.",`
+<div class="section"><h3>DOCUMENTARY REQUIREMENTS</h3><div style="padding:14px">
+${["Application / Cover Sheet","Articles of Incorporation or Partnership Agreement","By-Laws (where applicable)","Valid Identification / supporting documents","Other SEC-required supporting documents"].map((x,i)=>`<label class="check"><input id="doc${i}" type="checkbox"> ${x}</label>`).join("")}
+</div></div>
+<div class="notice2">In actual Regular Processing, signed/authenticated or notarized documentary requirements may be uploaded/submitted according to the applicable procedure. This mock does not upload anything.</div>`);
+case 12:return wrap("Step 13 — Application Review","Review system-generated information before submission.",`
+<div class="section"><h3>APPLICATION SUMMARY</h3><table id="summary"><tr><th>Field</th><th>Mock Value</th></tr></table></div>
+<div class="notice2">System-generated forms may include an application summary, cover sheet, Articles of Incorporation and other applicable forms. Review everything before submitting.</div>`);
+case 13:return wrap("Step 14 — Terms, Privacy & Certification","Read the declarations required before the application is submitted.",`
+<div class="section"><h3>DECLARATIONS</h3><div style="padding:14px">
+<div class="check"><input id="terms" type="checkbox"> I have read and agree to the terms of service, privacy notice, and certification.</div>
+<div class="check"><input id="truth" type="checkbox"> I certify that the information provided is true and correct.</div>
+<div class="check"><input id="mockOnly" type="checkbox"> I understand this page is a classroom simulation and does not transmit an application to SEC.</div>
+</div></div>
+<div class="section"><h3>VERIFICATION CODE</h3><div style="padding:14px"><div class="captcha"><span class="code">ESPARC7</span><input id="captcha" placeholder="Enter verification code"></div></div></div>`);
+case 14:return wrap("Step 15 — Submission & Payment","Complete the final classroom-only submission simulation.",`
+<div class="section"><h3>SUBMIT APPLICATION</h3><div style="padding:14px">
+<p style="font-size:12px">The real eSPARC process proceeds to application status, assessment/payment and the applicable certificate/release process. This page only simulates the final result.</p>
+<button class="danger" onclick="mockSubmit()">SUBMIT MOCK APPLICATION</button>
+<div id="result"></div>
+</div></div>`);
+}}
+function render(){
+document.querySelectorAll('.step').forEach((x,i)=>{x.className='step '+(i===cur?'active ':'')+(i<cur?'done':'')});
+document.getElementById('stepTitle').textContent=`STEP ${cur+1} — ${names[cur].toUpperCase()}`;
+document.getElementById('counter').textContent=`${cur+1} of 15`;
+document.getElementById('progress').style.width=((cur+1)/15*100)+'%';
+document.getElementById('content').innerHTML=page(cur);
+loadFields();
+if(cur===12)buildSummary();
+document.getElementById('nextBtn').textContent=cur===14?'Finish':'Save & Continue →';
+}
+function next(){saveFields();if(cur<14){cur++;render()}else{mockSubmit()}}
+function back(){saveFields();if(cur>0){cur--;render()}}
+function saveDraft(){saveFields();alert("Mock draft saved on this device only. No information was sent to SEC.")}
+function buildSummary(){
+let ids=[["Company Name","companyName"],["Applicant","first"],["Company Type","companyType"],["Processing","processing"],["SEC Office","office"],["Principal City","city"],["Industry","industry"],["Authorized Capital","authorized"],["Subscribed Capital","subscribed"]];
+let t=document.getElementById('summary');ids.forEach(([a,b])=>{let v=data[b]||"—";t.innerHTML+=`<tr><td>${a}</td><td>${String(v).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}</td></tr>`})
+}
+async function mockSubmit(){
+  saveFields();
+  let terms=data.terms&&data.truth&&data.mockOnly;
+  if(!terms){alert("Please complete all three mock declarations in Step 14 first.");return}
+  let ref="MOCK-SEC-"+Math.floor(100000+Math.random()*899999);
+  let company=(data.companyName||"SAMPLE COMPANY").replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  document.getElementById('result').innerHTML=`<div class="result"><b>MOCK APPLICATION SUBMITTED</b><p>Your classroom simulation has reached the end of the registration flow.</p><p>Mock Application Reference Number:</p><div class="ref">${ref}</div><div class="cert"><div>SECURITIES AND EXCHANGE COMMISSION</div><h3>SIMULATED CERTIFICATE OF REGISTRATION</h3><p><b>${company}</b></p><p>This is a fictional classroom output. It is NOT a real SEC certificate and has no legal effect.</p><p style="font-size:11px">No application, payment, document, or personal information was transmitted to SEC.</p></div></div>`;
+  await recordCompletion();
+}
+render();
+</script>
+</body>
+</html>
